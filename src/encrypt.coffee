@@ -1,16 +1,16 @@
 ###
   Copyright (c) 2014 clowwindy
-  
+
   Permission is hereby granted, free of charge, to any person obtaining a copy
   of this software and associated documentation files (the "Software"), to deal
   in the Software without restriction, including without limitation the rights
   to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
   copies of the Software, and to permit persons to whom the Software is
   furnished to do so, subject to the following conditions:
-  
+
   The above copyright notice and this permission notice shall be included in
   all copies or substantial portions of the Software.
-  
+
   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
   IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
   FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -57,7 +57,7 @@ getTable = (key) ->
   result = [table, decrypt_table]
   cachedTables[key] = result
   result
-  
+
 substitute = (table, buf) ->
   i = 0
 
@@ -128,7 +128,7 @@ class Encryptor
       @cipher = @get_cipher(@key, @method, 1, crypto.randomBytes(32))
     else
       [@encryptTable, @decryptTable] = getTable(@key)
-      
+
   get_cipher_len: (method) ->
     method = method.toLowerCase()
     m = method_supported[method]
@@ -163,12 +163,12 @@ class Encryptor
         return Buffer.concat([@cipher_iv, result])
     else
       substitute @encryptTable, buf
-      
+
   decrypt: (buf) ->
     if @method?
       if not @decipher?
         decipher_iv_len = @get_cipher_len(@method)[1]
-        decipher_iv = buf.slice(0, decipher_iv_len) 
+        decipher_iv = buf.slice(0, decipher_iv_len)
         @decipher = @get_cipher(@key, @method, 0, decipher_iv)
         result = @decipher.update(buf.slice(decipher_iv_len))
         return result
@@ -192,7 +192,7 @@ encryptAll = (password, method, op, data) ->
     method = method.toLowerCase()
     [keyLen, ivLen] = method_supported[method]
     password = Buffer(password, 'binary')
-    [key, iv_] = EVP_BytesToKey(password, keyLen, ivLen) 
+    [key, iv_] = EVP_BytesToKey(password, keyLen, ivLen)
     if op == 1
       iv = crypto.randomBytes ivLen
       result.push iv
